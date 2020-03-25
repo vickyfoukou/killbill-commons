@@ -12,25 +12,26 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
+      <profile name="Maven default annotation processors profile">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="killbill-embeddeddb-postgresql" />
-        <module name="killbill-embeddeddb-mysql" />
-        <module name="killbill-queue" />
-        <module name="killbill-xmlloader" />
-        <module name="killbill-concurrent" />
-        <module name="killbill-skeleton" />
-        <module name="killbill-metrics" />
         <module name="mssql" />
+        <module name="killbill-queue" />
         <module name="killbill-jdbi" />
         <module name="killbill-clock" />
+        <module name="killbill-xmlloader" />
+        <module name="killbill-locker" />
+        <module name="killbill-metrics" />
         <module name="killbill-automaton" />
+        <module name="killbill-concurrent" />
+        <module name="killbill-embeddeddb-postgresql" />
+        <module name="killbill-embeddeddb-mysql" />
+        <module name="killbill-skeleton" />
         <module name="killbill-embeddeddb-h2" />
         <module name="killbill-embeddeddb-common" />
-        <module name="killbill-locker" />
       </profile>
+      <profile name="default" />
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="killbill-automaton" target="1.8" />

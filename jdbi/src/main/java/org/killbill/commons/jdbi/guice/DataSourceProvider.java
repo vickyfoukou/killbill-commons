@@ -58,7 +58,7 @@ public class DataSourceProvider implements Provider<DataSource> {
 
     @VisibleForTesting
     static enum DatabaseType {
-        GENERIC, MYSQL, H2, POSTGRESQL
+        GENERIC, MYSQL, H2, POSTGRESQL, MSSQL
     }
 
     @Inject
@@ -337,6 +337,14 @@ public class DataSourceProvider implements Provider<DataSource> {
             }
             if (driverClassName == null) {
                 driverClassName = "org.postgresql.Driver";
+            }
+        } else if ("sqlserver".equals(uri.getScheme())){
+            databaseType = DatabaseType.MSSQL;
+            if(dataSourceClassName == null){
+                dataSourceClassName = "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
+            }
+            if(driverClassName == null){
+                driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
             }
         } else {
             databaseType = DatabaseType.GENERIC;

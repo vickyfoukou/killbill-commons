@@ -17,17 +17,17 @@
 
 package org.killbill.commons.embeddeddb.mssql;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.killbill.commons.embeddeddb.GenericStandaloneDB;
-import org.zapodot.junit.db.internal.EmbeddedDataSource;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
-public class MsSQLStandaloneDB extends GenericStandaloneDB {
+public class MsSQLStandaloneDB extends GenericStandaloneDB implements Closeable {
 
     private final int port;
 
@@ -37,7 +37,18 @@ public class MsSQLStandaloneDB extends GenericStandaloneDB {
     }
 
     public MsSQLStandaloneDB(final String databaseName, final String username, final String password) {
-        this(databaseName, username, password, "jdbc:sqlserver://localhost:1433;dataBasename=" + databaseName + "; integratedSecurity=true");
+        this(databaseName, username, password,
+             String.format("jdbc:sqlserver://localhost:1433;databaseName=%s;user=%s;password=%s",
+                           databaseName,
+                           username,
+                           password));
+        try {
+            this.initialize();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -50,11 +61,15 @@ public class MsSQLStandaloneDB extends GenericStandaloneDB {
     public void initialize() throws IOException, SQLException {
         super.initialize();
         dataSource = new SQLServerDataSource();
+        ((SQLServerDataSource) dataSource).setDatabaseName(databaseName);
+        ((SQLServerDataSource) dataSource).setUser(username);
+        ((SQLServerDataSource) dataSource).setPassword(password);
+        ((SQLServerDataSource) dataSource).setURL(jdbcConnectionString);
     }
 
     @Override
     public void refreshTableNames() throws IOException {
-        String sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = db_name() AND TABLE_TYPE = 'BASE TABLE'; GO";
+        final String sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = db_name() AND TABLE_TYPE = 'BASE TABLE'";
         try {
             executeQuery(sql, new ResultSetJob() {
                 @Override
@@ -72,10 +87,15 @@ public class MsSQLStandaloneDB extends GenericStandaloneDB {
 
     @Override
     public String getCmdLineConnectionString() {
-        return String.format("SQLSERVER_PASSWORD=%s mssql -U%s -p%s %s", password, username, port, databaseName);
+        return String.format("-P %s -U %s -p %s %s", password, username, port, databaseName);
     }
 
     public int getPort(){
         return this.port;
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

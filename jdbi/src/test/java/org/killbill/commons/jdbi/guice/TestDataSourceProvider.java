@@ -75,7 +75,9 @@ public class TestDataSourceProvider {
         DataSourceProvider dataSourceProvider;
 
         // H2
-        databaseType = DataSourceProvider.DatabaseType.H2;
+        //databaseType = DataSourceProvider.DatabaseType.H2;
+        //SQL Server
+        databaseType = DatabaseType.MSSQL;
         daoConfig = buildDaoConfig(DataSourceConnectionPoolingType.NONE, databaseType);
 
         poolName = TEST_POOL_PREFIX + "-nopool-" + databaseType;
@@ -108,6 +110,8 @@ public class TestDataSourceProvider {
 
         // H2
         databaseType = DataSourceProvider.DatabaseType.H2;
+        //SQL Server
+        databaseType = DatabaseType.MSSQL;
         daoConfig = buildDaoConfig(DataSourceConnectionPoolingType.HIKARICP, databaseType);
 
         poolName = TEST_POOL_PREFIX + "-0-" + databaseType;
@@ -129,7 +133,10 @@ public class TestDataSourceProvider {
     public void testDataSourceProviderHikariCPPoolSizing() {
         final DataSourceConnectionPoolingType poolingType = DataSourceConnectionPoolingType.HIKARICP;
 
-        final DataSourceProvider.DatabaseType databaseType = DataSourceProvider.DatabaseType.H2;
+        //H2
+        //final DataSourceProvider.DatabaseType databaseType = DataSourceProvider.DatabaseType.H2;
+        //SQL Server
+        final DataSourceProvider.DatabaseType databaseType = DatabaseType.MSSQL;
 
         final Properties properties = defaultDaoConfigProperties(poolingType, databaseType);
         properties.put("org.killbill.dao.minIdle", "20");
@@ -149,7 +156,10 @@ public class TestDataSourceProvider {
     public void testDataSourceProviderHikariCPSetsInitSQL() {
         final DataSourceConnectionPoolingType poolingType = DataSourceConnectionPoolingType.HIKARICP;
 
-        final DataSourceProvider.DatabaseType databaseType = DataSourceProvider.DatabaseType.H2;
+        //H2
+        //final DataSourceProvider.DatabaseType databaseType = DataSourceProvider.DatabaseType.H2;
+        //SQL Server
+        final DataSourceProvider.DatabaseType databaseType = DatabaseType.MSSQL;
         final boolean shouldUseMariaDB = true;
 
         final Properties properties = defaultDaoConfigProperties(poolingType, databaseType);
@@ -219,6 +229,8 @@ public class TestDataSourceProvider {
             properties.put("org.killbill.dao.url", "jdbc:mysql://127.0.0.1:3306/killbill");
         } else if (DataSourceProvider.DatabaseType.H2.equals(databaseType)) {
             properties.put("org.killbill.dao.url", "jdbc:h2:file:/var/tmp/killbill;MODE=MYSQL;DB_CLOSE_DELAY=-1;MVCC=true;DB_CLOSE_ON_EXIT=FALSE");
+        }else if(DatabaseType.MSSQL.equals(databaseType)){
+            properties.put("org.killbill.dao.url", "jdbc:sqlserver://127.0.0.1:1433;databaseName=TestDB");
         } else {
             properties.put("org.killbill.dao.url", "jdbc:test:@myhost:1521:orcl");
 

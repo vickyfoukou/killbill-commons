@@ -42,19 +42,21 @@ public class TestingMsSQLServer implements Closeable {
     private static final Logger log = LoggerFactory.getLogger(TestingMsSQLServer.class);
 
     private final String user;
+    private final String password;
     private final String database;
     private final int port;
     private final EmbeddedMsSQL server;
 
     public TestingMsSQLServer(final String user, final String database) throws Exception {
-        this(user, null, database);
+        this(user, null, null, database);
     }
 
-    public TestingMsSQLServer(final String user, @Nullable final Integer portOrNull, final String database) throws Exception {
+    public TestingMsSQLServer(final String user, final String password, @Nullable final Integer portOrNull, final String database) throws Exception {
         // Make sure the driver is registered
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
         this.user = checkNotNull(user, "user is null");
+        this.password = checkNotNull(password, "password is null");
         this.database = checkNotNull(database, "database is null");
 
         if (portOrNull == null) {
@@ -70,8 +72,9 @@ public class TestingMsSQLServer implements Closeable {
             Statement statement = null;
             try {
                 statement = connection.createStatement();
-                execute(statement, format("CREATE ROLE %s WITH LOGIN SUPERUSER", user));
-                execute(statement, format("CREATE DATABASE %s OWNER %s ENCODING = 'utf8'", database, user));
+                execute(statement, format("DROP SERVER ROLE test_role"));
+                execute(statement, format("CREATE SERVER ROLE test_role AUTHORIZATION %s", user));
+                execute(statement, format("IF NOT EXISTS (SELECT * FROM sys.databases where name ='%s_Test' ) CREATE DATABASE %s_Test", database, database));
             } finally {
                 if (statement != null) {
                     statement.close();
@@ -111,7 +114,7 @@ public class TestingMsSQLServer implements Closeable {
     }
 
     public String getJdbcUrl() {
-        return server.getJdbcUrl(user, database);
+        return server.getJdbcUrl(user, password, database);
     }
 
     public static String toString(final InputStream inputStream) throws IOException {

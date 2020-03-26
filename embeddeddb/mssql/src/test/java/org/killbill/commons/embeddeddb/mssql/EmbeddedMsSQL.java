@@ -64,17 +64,15 @@ public class EmbeddedMsSQL implements Closeable {
 
     private static final Logger log = LoggerFactory.getLogger(EmbeddedMsSQL.class);
 
-    private static final String JDBC_FORMAT = "jdbc:sqlserver://localhost:%s;databaseName=%s;user=%s";
+    private static final String JDBC_FORMAT = "jdbc:sqlserver://localhost:%s;databaseName=%s;user=%s;password=%s";
 
-    private static final String SQLSERVER_SUPERUSER = "SA";
+    private static final String SQLSERVER_SUPERUSER = "sa";
 
-    private static final Duration _STARTUP_WAIT = new Duration(10, TimeUnit.SECONDS);
     private static final io.airlift.units.Duration COMMAND_TIMEOUT = new io.airlift.units.Duration(30, TimeUnit.SECONDS);
 
 
     private final ExecutorService executor = newCachedThreadPool(daemonThreadsNamed("testing-mssql-server-%s"));
     private final Path serverDirectory;
-    private final Path dataDirectory;
     private final int port;
     private final AtomicBoolean closed = new AtomicBoolean();
     private final Map<String, String> mssqlConfig;
@@ -87,8 +85,7 @@ public class EmbeddedMsSQL implements Closeable {
     public EmbeddedMsSQL(final int port) throws IOException {
         this.port = port;
 
-        serverDirectory = createTempDirectory("testing-mssql-server");
-        dataDirectory = serverDirectory.resolve("data");
+        serverDirectory = new File("/opt/mssql-tools/bin").toPath();
 
         mssqlConfig = ImmutableMap.<String, String>builder()
                 .put("timezone", "UTC")
@@ -97,8 +94,6 @@ public class EmbeddedMsSQL implements Closeable {
                 .build();
 
         try {
-            unpackSqlserver(serverDirectory);
-
             sqlServerVersion();
             initdb();
             postmaster = startPostmaster();
@@ -130,8 +125,8 @@ public class EmbeddedMsSQL implements Closeable {
         return (OS_NAME.value() + "-" + OS_ARCH.value()).replace(' ', '_');
     }
 
-    public String getJdbcUrl(final String userName, final String dbName) {
-        return format(JDBC_FORMAT, port, dbName, userName);
+    public String getJdbcUrl(final String userName, final String password, final String dbName) {
+        return format(JDBC_FORMAT, port, dbName, userName, password);
     }
 
     public int getPort() {
@@ -139,7 +134,7 @@ public class EmbeddedMsSQL implements Closeable {
     }
 
     public Connection getMssqlDatabase() throws SQLException {
-        return DriverManager.getConnection(getJdbcUrl("SA", "killbillg"));
+        return DriverManager.getConnection(getJdbcUrl("sa", "creationfox7*","TestDB"));
     }
 
     @Override
@@ -175,20 +170,22 @@ public class EmbeddedMsSQL implements Closeable {
     }
 
     private void initdb() {
-        system(pgBin("initdb"),
-               "-A", "trust",
+        system(pgBin("sqlcmd"),
+               "-S", "localhost",
                "-U", SQLSERVER_SUPERUSER,
-               "-D", dataDirectory.toString(),
-               "-E", "UTF-8");
+               "-P", "creationfox7*",
+               "-d", "TestDB",
+               "-Q", "SELECT * from sys.Databases");
     }
 
     private Process startPostmaster()
             throws IOException {
-        final List<String> args = newArrayList(pgBin("mssql"),
-                                               "-D", dataDirectory.toString(),
-                                               "-p", String.valueOf(port),
-                                               "-i",
-                                               "-F");
+        final List<String> args = newArrayList(pgBin("sqlcmd"),
+                                               "-S", "localhost",
+                                               "-U", SQLSERVER_SUPERUSER,
+                                               "-P", "creationfox7*",
+                                               "-d", "TestDB",
+                                               "-q", "SELECT name from sys.Databases");
 
         for (final Entry<String, String> config : mssqlConfig.entrySet()) {
             args.add("-c");
@@ -200,15 +197,16 @@ public class EmbeddedMsSQL implements Closeable {
                 .redirectOutput(ProcessBuilder.Redirect.INHERIT)
                 .start();
 
-        log.info("SQL Server started on port %d");
+        log.info("SQL Server started on port 1443");
 
         startOutputProcessor(process.getInputStream());
 
-        waitForServerStartup(process);
+       // waitForServerStartup(process);
 
         return process;
     }
 
+/*
     private void waitForServerStartup(final Process process) throws IOException {
         Throwable lastCause = null;
         final long start = System.nanoTime();
@@ -239,6 +237,7 @@ public class EmbeddedMsSQL implements Closeable {
         }
         throw new IOException("SQL_SERVER failed to start after " + _STARTUP_WAIT, lastCause);
     }
+*/
 
     private void checkReady() throws SQLException {
 
@@ -274,15 +273,15 @@ public class EmbeddedMsSQL implements Closeable {
 
     private void pgStop() {
         system(pgBin("sqlcmd"),
-               "stop",
-               "-D", dataDirectory.toString(),
-               "-m", "fast",
-               "-t", "5",
-               "-w");
+               "-S", "localhost",
+               "-U", SQLSERVER_SUPERUSER,
+               "-P", "creationfox7*",
+               "-d", "TestDB",
+               "-Q", "SELECT * from sys.Databases");
     }
 
     private String pgBin(final String binaryName) {
-        return serverDirectory.resolve("sqlcmd").resolve(binaryName).toString();
+        return serverDirectory.resolve(binaryName).toString();
     }
 
     private void startOutputProcessor(final InputStream in) {

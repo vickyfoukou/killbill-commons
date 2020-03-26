@@ -50,7 +50,7 @@ public class TestReaper extends TestSetup {
     @BeforeClass(groups = "slow")
     public void beforeClass() throws Exception {
         super.beforeClass();
-        sqlDao = getDBI().onDemand(PersistentBusSqlDao.class);
+        sqlDao = getDBI().onDemand(org.killbill.bus.dao.PersistentBusSqlDao.class); //replace with SQLServerBusDao
     }
 
     @BeforeMethod(groups = "slow")

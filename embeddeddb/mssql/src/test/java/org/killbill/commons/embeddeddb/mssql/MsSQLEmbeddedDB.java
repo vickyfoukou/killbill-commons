@@ -94,7 +94,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
                 public void work(final ResultSet resultSet) throws SQLException {
                     allTables.clear();
                     while (resultSet.next()) {
-                        allTables.add(resultSet.getString(1));
+                        allTables.add(resultSet.getString("TABLE_NAME"));
                     }
                 }
             });
@@ -132,7 +132,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
 
     private void startSQLServer() throws IOException {
         try {
-            this.testingSqlServer = new TestingMsSQLServer(username, port, databaseName);
+            this.testingSqlServer = new TestingMsSQLServer(username, password, port, databaseName);
         } catch (final Exception e) {
             throw new IOException(e);
         }

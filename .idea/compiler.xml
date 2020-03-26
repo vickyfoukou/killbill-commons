@@ -17,21 +17,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mssql" />
-        <module name="killbill-queue" />
+        <module name="killbill-embeddeddb-h2" />
         <module name="killbill-jdbi" />
-        <module name="killbill-clock" />
         <module name="killbill-xmlloader" />
         <module name="killbill-locker" />
-        <module name="killbill-metrics" />
+        <module name="killbill-queue" />
         <module name="killbill-automaton" />
         <module name="killbill-concurrent" />
         <module name="killbill-embeddeddb-postgresql" />
+        <module name="killbill-metrics" />
         <module name="killbill-embeddeddb-mysql" />
         <module name="killbill-skeleton" />
-        <module name="killbill-embeddeddb-h2" />
+        <module name="killbill-clock" />
         <module name="killbill-embeddeddb-common" />
       </profile>
-      <profile name="default" />
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="killbill-automaton" target="1.8" />

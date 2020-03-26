@@ -1,4 +1,11 @@
 import "org/killbill/queue/dao/QueueSqlDao.sql.stg"
+/**
+ NOTE : This file has been changed to add support for SQL Server T-SQL queries. The major change here is removing limit and using
+ T-SQL TOP (variable) after the select. Other SQL databases use limit to fetch limited amounts of data but T-SQL requires to use TOP
+
+ @author : Akah Harvey
+
+**/
 
 extraFieldsWithComma() ::= <<
 >>
@@ -24,7 +31,7 @@ reapWhereClause() ::= <<
 >>
 
 getReadyEntryIds(owner, tableName) ::= <<
-    select
+    select TOP (:max)
       record_id
     from <tableName>
     where
@@ -32,7 +39,6 @@ getReadyEntryIds(owner, tableName) ::= <<
       and <readyWhereClause(owner)>
     order by
       <readyOrderByClause()>
-    limit :max
     ;
 >>
 

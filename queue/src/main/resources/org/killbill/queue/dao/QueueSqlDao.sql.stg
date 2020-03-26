@@ -1,5 +1,12 @@
 /** TO BE OVERWRITTEN IN CHILD TEMPLATE **/
 
+/**
+ NOTE : This file has been changed to add support for SQL Server T-SQL queries. The major change here is removing limit and using
+ T-SQL TOP (variable) after the select. Other SQL databases use limit to fetch limited amounts of data but T-SQL requires to use TOP
+
+ @author : Akah Harvey
+
+**/
 
 readyWhereClause(owner) ::= <<
 >>
@@ -128,14 +135,13 @@ getEntriesFromIds(tableName, record_ids) ::= <<
 >>
 
 getReadyEntries(owner, tableName) ::= <<
-    select
+    select TOP (:max)
       <allTableFields()>
     from <tableName>
     where
       <readyWhereClause(owner)>
     order by
       <readyOrderByClause()>
-    limit :max
     ;
 >>
 
@@ -160,13 +166,12 @@ getInProcessingEntries(tableName) ::= <<
 >>
 
 getEntriesLeftBehind(tableName) ::= <<
-    select
+    select TOP (:max)
       <allTableFields()>
     from <tableName>
     where
       <reapWhereClause()>
     order by created_date asc
-    limit :max;
 >>
 
 claimEntry(tableName) ::= <<

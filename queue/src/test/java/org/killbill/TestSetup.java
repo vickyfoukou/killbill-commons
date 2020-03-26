@@ -26,6 +26,7 @@ import org.killbill.bus.api.PersistentBusConfig;
 import org.killbill.clock.ClockMock;
 import org.killbill.commons.embeddeddb.EmbeddedDB;
 import org.killbill.commons.embeddeddb.h2.H2EmbeddedDB;
+import org.killbill.commons.embeddeddb.mssql.MsSQLEmbeddedDB;
 import org.killbill.commons.embeddeddb.mysql.MySQLEmbeddedDB;
 import org.killbill.commons.embeddeddb.postgresql.PostgreSQLEmbeddedDB;
 import org.killbill.commons.jdbi.notification.DatabaseTransactionNotificationApi;
@@ -69,12 +70,14 @@ public class TestSetup {
 
         clock = new ClockMock();
 
-        // See also PlatformDBTestingHelper
+        // See also PlatformDBTestingHelper( this file is not found in this module, but in killbill-platform, so would be good for the reference to be put here)
         if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "h2"))) {
             embeddedDB = new H2EmbeddedDB("killbillq", "killbillq", "killbillq");
         } else if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "postgresql"))) {
             embeddedDB = new PostgreSQLEmbeddedDB("killbillq", "killbillq");
-        } else {
+        } else if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX+"mssql"))){
+            embeddedDB = new MsSQLEmbeddedDB("TestDB", "sa", "creationfox7*");
+        }else {
             embeddedDB = new MySQLEmbeddedDB("killbillq", "killbillq", "killbillq");
         }
 
@@ -96,7 +99,7 @@ public class TestSetup {
                                      "$$ LANGUAGE plpgsql VOLATILE;");
         }
 
-        final String ddl = toString(Resources.getResource("org/killbill/queue/ddl.sql").openStream());
+        final String ddl = toString(Resources.getResource("org/killbill/queue/ddl-sql-server.sql").openStream());
         embeddedDB.executeScript(ddl);
 
         embeddedDB.refreshTableNames();

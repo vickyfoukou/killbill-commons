@@ -43,7 +43,8 @@ public abstract class EmbeddedDB {
         GENERIC,
         MYSQL,
         H2,
-        POSTGRESQL
+        POSTGRESQL,
+        MSSQL
     }
     // Not final to allow more flexible implementers
     protected String databaseName;
@@ -129,6 +130,9 @@ public abstract class EmbeddedDB {
                 break;
             case H2:
                 dataSourceClassName = "org.h2.jdbcx.JdbcDataSource";
+                break;
+            case MSSQL:
+                dataSourceClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
                 break;
             default:
                 dataSourceClassName = null;

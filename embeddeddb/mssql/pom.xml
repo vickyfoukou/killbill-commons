@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2010-2013 Ning, Inc.
-  ~ Copyright 2014-2018 Groupon, Inc
-  ~ Copyright 2014-2018 The Billing Project, LLC
+  ~ Copyright 2014-2020 Groupon, Inc
+  ~ Copyright 2014-2020 The Billing Project, LLC
   ~
   ~ The Billing Project licenses this file to you under the Apache License, version 2.0
   ~ (the "License"); you may not use this file except in compliance with the
@@ -19,13 +18,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>killbill-commons</artifactId>
+        <artifactId>killbill-embeddeddb</artifactId>
         <groupId>org.kill-bill.commons</groupId>
         <version>0.23.8-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>killbill-locker</artifactId>
-    <name>Kill Bill distributed locking library</name>
+
+    <artifactId>mssql</artifactId>
+    <name>Kill Bill library of embedded dbs: MsSQL</name>
+
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -33,15 +33,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>8.2.1.jre8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc42</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
             <groupId>io.airlift</groupId>
-            <artifactId>testing-postgresql-server</artifactId>
+            <artifactId>command</artifactId>
+            <version>0.3</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>guava</artifactId>
-                    <groupId>com.google.guava</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.airlift</groupId>
@@ -50,52 +56,33 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-mxj</artifactId>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.7.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.kill-bill.commons</groupId>
+            <artifactId>killbill-embeddeddb-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.kill-bill.commons</groupId>
+            <artifactId>killbill-jdbi</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
-            <artifactId>killbill-concurrent</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>killbill-embeddeddb-mysql</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>mssql</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>killbill-embeddeddb-postgresql</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>guava</artifactId>
-                    <groupId>com.google.guava</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>mssql</artifactId>
-            <version>0.23.8-SNAPSHOT</version>
-            <type>test-jar</type>
+            <artifactId>killbill-queue</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -103,5 +90,12 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.zapodot</groupId>
+            <artifactId>embedded-db-junit</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
     </dependencies>
+
 </project>

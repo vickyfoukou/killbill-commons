@@ -21,6 +21,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -102,6 +104,39 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
             throw new IOException(e);
         }
 
+    }
+
+    /**
+     * Initiate two transactions and return their session_ids for testing
+     * @return a configuration map of the transaction and their session_ids
+     */
+    public Map<String, String> initTransactions(){
+        Map<String, String> transactionMap = new HashMap<>();
+        String sql1 = "DROP TABLE IF EXISTS test_table; CREATE TABLE test_table (_id INT PRIMARY KEY IDENTITY (1,1), name varchar(255)); BEGIN TRAN T1; insert into test_table VALUES ('dumy jjack'); select @@SPID as session_id";
+        String sql12 = "BEGIN TRAN T2; select * from test_table; SELECT @@SPID as session_id";
+        try{
+            executeQuery(sql1, new ResultSetJob(){
+                @Override
+                public void work(final ResultSet resultSet) throws SQLException {
+                    while (resultSet.next()){
+                        transactionMap.put("T1", resultSet.getString("session_id"));
+                    }
+                }
+            });
+            executeQuery(sql12, new ResultSetJob(){
+                @Override
+                public void work(final ResultSet resultSet) throws SQLException {
+                    while (resultSet.next()){
+                        transactionMap.put("T2", resultSet.getString("session_id"));
+                    }
+                }
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return transactionMap;
     }
 
     @Override

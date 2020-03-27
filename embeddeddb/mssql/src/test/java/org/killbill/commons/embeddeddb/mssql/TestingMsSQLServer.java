@@ -72,8 +72,8 @@ public class TestingMsSQLServer implements Closeable {
             Statement statement = null;
             try {
                 statement = connection.createStatement();
-                execute(statement, format("DROP SERVER ROLE test_role"));
-                execute(statement, format("CREATE SERVER ROLE test_role AUTHORIZATION %s", user));
+                //execute(statement, format("DROP SERVER ROLE test_role"));
+                execute(statement, format("IF NOT EXISTS (SELECT name from sys.server_principals where name='test_role') CREATE SERVER ROLE test_role AUTHORIZATION %s", user));
                 execute(statement, format("IF NOT EXISTS (SELECT * FROM sys.databases where name ='%s_Test' ) CREATE DATABASE %s_Test", database, database));
             } finally {
                 if (statement != null) {

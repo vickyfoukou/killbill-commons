@@ -126,18 +126,6 @@
             </dependency>
             <dependency>
                 <groupId>org.kill-bill.commons</groupId>
-                <artifactId>mssql</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.kill-bill.commons</groupId>
-                <artifactId>mssql</artifactId>
-                <version>${project.version}</version>
-                <type>test-jar</type>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.kill-bill.commons</groupId>
                 <artifactId>killbill-jdbi</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -165,6 +153,18 @@
                 <groupId>org.kill-bill.commons</groupId>
                 <artifactId>killbill-xmlloader</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kill-bill.commons</groupId>
+                <artifactId>mssql</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kill-bill.commons</groupId>
+                <artifactId>mssql</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>

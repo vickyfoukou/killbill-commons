@@ -40,10 +40,9 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
 
     private TestingMsSQLServer testingSqlServer;
 
-    protected MsSQLEmbeddedDB(final String databaseName, final String username) {
-        super(databaseName, username, null, null);
-        this.port = getPort();
-        this.jdbcConnectionString = String.format("jdbc:sqlserver://localhost:%s;databaseName=%s;user=%s", port, databaseName, username);
+    protected MsSQLEmbeddedDB() {
+        this("database" + UUID.randomUUID().toString().substring(0, 8),
+             "user" + UUID.randomUUID().toString().substring(0, 8), "");
     }
 
     public MsSQLEmbeddedDB(final String databaseName, final String username, final String password) {

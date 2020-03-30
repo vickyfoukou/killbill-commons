@@ -32,7 +32,7 @@ import org.killbill.commons.embeddeddb.EmbeddedDB;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 
-public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
+public class MsSQLEmbeddedDB extends EmbeddedDB {
 
     protected final AtomicBoolean started = new AtomicBoolean(false);
 
@@ -40,7 +40,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
 
     private TestingMsSQLServer testingSqlServer;
 
-    protected MsSQLEmbeddedDB() {
+    public MsSQLEmbeddedDB() {
         this("database" + UUID.randomUUID().toString().substring(0, 8),
              "user" + UUID.randomUUID().toString().substring(0, 8), "");
     }
@@ -51,7 +51,11 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
                             databaseName,
                             username,
                             password));
-        this.port = 1433;
+        this.jdbcConnectionString = String.format("jdbc:sqlserver://localhost:1433;databaseName=%s;user=%s;password=%s",
+                                                  databaseName,
+                                                  username,
+                                                  password);
+        this.port = getPort();
     }
 
     @Override
@@ -182,10 +186,5 @@ public class MsSQLEmbeddedDB extends EmbeddedDB implements Closeable {
             started.set(false);
             logger.info("SQL Server stopped: " + getCmdLineConnectionString());
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-
     }
 }

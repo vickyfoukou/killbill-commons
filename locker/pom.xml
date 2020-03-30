@@ -66,12 +66,6 @@
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
-            <artifactId>mssql</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-postgresql</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
@@ -81,6 +75,12 @@
                     <groupId>com.google.guava</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.kill-bill.commons</groupId>
+            <artifactId>mssql</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>

@@ -71,16 +71,6 @@
             <artifactId>killbill-embeddeddb-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>killbill-jdbi</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.commons</groupId>
-            <artifactId>killbill-queue</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <scope>test</scope>

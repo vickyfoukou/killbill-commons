@@ -55,7 +55,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB {
                                                   databaseName,
                                                   username,
                                                   password);
-        this.port = getPort();
+        this.port =1433;
     }
 
     @Override

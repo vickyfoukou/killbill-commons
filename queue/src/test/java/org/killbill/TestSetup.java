@@ -99,7 +99,7 @@ public class TestSetup {
                                      "$$ LANGUAGE plpgsql VOLATILE;");
         }
 
-        final String ddl = toString(Resources.getResource("org/killbill/queue/ddl-sql-server.sql").openStream());
+        final String ddl = toString(Resources.getResource("org/killbill/queue/ddl-mssql.sql").openStream());
         embeddedDB.executeScript(ddl);
 
         embeddedDB.refreshTableNames();

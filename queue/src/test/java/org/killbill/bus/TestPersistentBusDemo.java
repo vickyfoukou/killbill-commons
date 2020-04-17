@@ -25,6 +25,7 @@ import com.google.common.io.Resources;
 import org.killbill.TestSetup;
 import org.killbill.bus.api.BusEvent;
 import org.killbill.bus.api.PersistentBus;
+import org.killbill.commons.embeddeddb.mssql.MsSQLEmbeddedDB;
 import org.killbill.commons.embeddeddb.mysql.MySQLEmbeddedDB;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -42,7 +43,7 @@ import java.util.UUID;
 
 public class TestPersistentBusDemo {
 
-    private MySQLEmbeddedDB embeddedDB;
+    private MsSQLEmbeddedDB embeddedDB;
     private DefaultPersistentBus bus;
     private DataSource dataSource;
 
@@ -50,11 +51,11 @@ public class TestPersistentBusDemo {
     @BeforeClass(groups = "slow")
     public void beforeClass() throws Exception {
 
-        embeddedDB = new MySQLEmbeddedDB("killbillq", "killbillq", "killbillq");
+        embeddedDB = new MsSQLEmbeddedDB("TestDB", "sa", "creationfox7*");
         embeddedDB.initialize();
         embeddedDB.start();
 
-        final String ddl = TestSetup.toString(Resources.getResource("org/killbill/queue/ddl.sql").openStream());
+        final String ddl = TestSetup.toString(Resources.getResource("org/killbill/queue/ddl-mssql.sql").openStream());
         embeddedDB.executeScript(ddl);
 
         final String ddlTest = TestSetup.toString(Resources.getResource("queue/ddl_test.sql").openStream());

@@ -243,7 +243,7 @@ public class TestLoadDefaultPersistentBus extends TestSetup {
             dbi.inTransaction(new TransactionCallback<Void>() {
                 @Override
                 public Void inTransaction(final Handle conn, final TransactionStatus status) throws Exception {
-                    Assert.assertEquals(conn.select("select now();").size(), 1);
+                    Assert.assertEquals(conn.select("select getdate();").size(), 1);
 
                     final BusEvent event = new LoadBusEvent();
                     eventBus.postFromTransaction(event, conn.getConnection());

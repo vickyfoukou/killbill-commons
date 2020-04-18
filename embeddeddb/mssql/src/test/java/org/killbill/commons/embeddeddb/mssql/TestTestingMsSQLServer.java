@@ -40,14 +40,14 @@ public class TestTestingMsSQLServer {
 
     @BeforeClass(groups = "fast")
     public void setUp(){
-        embeddedDB = new MsSQLStandaloneDB("TestDB","sa", "Msqlpassword1#");
+        embeddedDB = new MsSQLStandaloneDB("TestDB","sa", "creationfox7*");
     }
 
     @Test(groups = "fast")
     public void testDatabase() throws IOException {
-        final String database = "MYDB";
+        final String database = "TestDB";
         final String username = "sa";
-        final String password = "Msqlpassword1#";
+        final String password = "creationfox7*";
         //test database connection with StandAlone DB
         final MsSQLStandaloneDB testTestingMsSQLServer = new MsSQLStandaloneDB(database, username, password);
         assertNotNull(testTestingMsSQLServer.getJdbcConnectionString());

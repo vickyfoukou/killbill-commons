@@ -20,6 +20,7 @@
     <file url="file://$PROJECT_DIR$/embeddeddb/postgresql/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdbi" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jdbi/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jdbi/target/generated-sources/antlr3" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/locker" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/locker/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/metrics" charset="UTF-8" />

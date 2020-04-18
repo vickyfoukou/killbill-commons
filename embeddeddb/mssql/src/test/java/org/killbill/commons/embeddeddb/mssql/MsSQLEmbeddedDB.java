@@ -41,8 +41,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB {
     private TestingMsSQLServer testingSqlServer;
 
     public MsSQLEmbeddedDB() {
-        this("database" + UUID.randomUUID().toString().substring(0, 8),
-             "user" + UUID.randomUUID().toString().substring(0, 8), "");
+        this("database" + UUID.randomUUID().toString().substring(0, 8), "sa", "creationfox7*");
     }
 
     public MsSQLEmbeddedDB(final String databaseName, final String username, final String password) {
@@ -55,7 +54,7 @@ public class MsSQLEmbeddedDB extends EmbeddedDB {
                                                   databaseName,
                                                   username,
                                                   password);
-        this.port = getPort();
+        this.port =1433;
     }
 
     @Override

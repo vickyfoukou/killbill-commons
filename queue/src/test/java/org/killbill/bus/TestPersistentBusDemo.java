@@ -63,7 +63,6 @@ public class TestPersistentBusDemo {
 
         embeddedDB.refreshTableNames();
 
-
         dataSource = embeddedDB.getDataSource();
         final Properties properties = new Properties();
         properties.setProperty("org.killbill.persistent.bus.main.inMemory", "false");
@@ -106,7 +105,7 @@ public class TestPersistentBusDemo {
         try {
             // In one transaction we both insert a dummy value in some table, and post the event (using same connection/transaction)
             connection.setAutoCommit(false);
-            stmt = connection.prepareStatement("insert into dummy (dkey, dvalue) values (?, ?)");
+            stmt = connection.prepareStatement("insert into dummy (dkey, dvalue) values (?, ?);");
             stmt.setString(1, "Great!");
             stmt.setLong(2, 47L);
             stmt.executeUpdate();
